@@ -24,11 +24,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
 //                configuration.applicationId = "CodePath-Parse"
 //                configuration.server = "http://45.79.67.127:1337/parse"
-                
-            }))
+        
+            })
+        )
+           // check if user is logged in
+        if PFUser.current() != nil {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let tabBarController = storyboard.instantiateViewController(withIdentifier: "tabView") as! UITabBarController
+            
+            self.window?.rootViewController = tabBarController
+        }
      
         // Override point for customization after application launch.
         return true
+    }
+    
+    func userLogOut() {
+        // Logout the current user
+        PFUser.logOutInBackground(block: { (error) in
+            if let error = error {
+                print(error.localizedDescription)
+            } else {
+                print("Successful logout")
+                // Load and show the login view controller
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginView")
+                self.window?.rootViewController = loginViewController
+            }
+        })
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
