@@ -8,44 +8,123 @@
 
 import UIKit
 import Parse
+import AlamofireImage
 
 
 class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
-    @IBOutlet weak var imageFeed: UIImageView!
-    
+  
+
     
     @IBOutlet weak var tableView: UITableView!
+    
+    
+    var postView: [Post] = []
+        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.rowHeight =  100
-        
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        self.tableView.rowHeight = 500
+        let refreshControl = UIRefreshControl()
+        self.loadPosts()
+        // Initialize a UIRefreshControl
+        refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), for: UIControlEvents.valueChanged)
+        // add refresh control to table view
+        tableView.insertSubview(refreshControl, at: 0)
 
+    
         // Do any additional setup after loading the view.
     }
     
+    @IBAction func posterTap(_ sender: UITapGestureRecognizer) {
+        performSegue(withIdentifier: "detail", sender: nil)
+    }
     
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let cell = sender as! UITableViewCell
+        if let indexPath = tableView.indexPath(for: cell) {
+            let post = postView[indexPath.section]
+        let ProfileController = segue.destination as! ProfileViewController
+        ProfileController.updatePost = post
+        }
+    }
+    
+    private func loadPosts() {
+        let query = PFQuery(className: "Post")
+        query.order(byDescending: "createdAt")
+        query.includeKey("author")
+        query.includeKey("createdAt")
+        query.limit = 20
+        
+        
+        query.findObjectsInBackground { (posts: [PFObject]?, error: Error?) in
+            if let posts = posts {
+                    self.postView = posts as! [Post]
+                } else {
+                    self.alertControl2()
+                    print("error")
+                }
+            self.tableView.reloadData()
+            }
+        }
+    
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return postView.count
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
+        if self.postView.count != 0{
+            return self.postView.count
+        }else{
+            print("no posts found")
+            return 0
+        }
     }
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ChatCell", for: indexPath) as! ChatCell
-//        let message = messages[indexPath.row]
-//        let chat_message = message["text"] as! String
-//        cell.chatMessage.text = chat_message
-//
-//        if let user = message["user"] as? PFUser {
-//            // User found! update username label with username
-//            cell.chatID.text = user.username
-//        } else {
-//            // No user found, set default username
-//            cell.chatID.text = "🤖"
-//        }
+        cell.updatePost = self.postView[indexPath.row]
+        print(postView)
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 50))
+        headerView.backgroundColor = UIColor(white: 1, alpha: 0.9)
+        
+        let profileView = UIImageView(frame: CGRect(x: 10, y: 10, width: 30, height: 30))
+        profileView.clipsToBounds = true
+        profileView.layer.cornerRadius = 15;
+        profileView.layer.borderColor = UIColor(white: 0.7, alpha: 0.8).cgColor
+        profileView.layer.borderWidth = 1;
+        
+        let username = PFUser.current()!.username!
+        
+        // Set the avatar
+        profileView.af_setImage(withURL: URL(string: "https://api.adorable.io/avatars/30/\(username)")!)
+        headerView.addSubview(profileView)
+        
+        let postLabel = UILabel(frame: CGRect(x: 50, y: 10, width: 270, height: 30))
+        postLabel.text = username
+        headerView.addSubview(postLabel)
+        
+        return headerView
+    }
+    
+  
 
     @IBAction func logout(_ sender: Any) {
         PFUser.logOutInBackground(block: { (error) in
@@ -61,12 +140,14 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             }
             
         })
+        NotificationCenter.default.post(name: NSNotification.Name("didLogout"), object: nil)
+        
     }
     
-    
+  
     
     func alertControl2 () {
-        let alertController = UIAlertController(title: "Network Error while logging out", message: "Try again" , preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Cannont find object in background", message: "Try again" , preferredStyle: .alert)
         //        let cancelAction = UIAlertAction(title: "Cancel", style: .default) {(action) in
         
         //        }
@@ -78,6 +159,16 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         }
     }
     
+    // Makes a network request to get updated data
+    // Updates the tableView with the new data
+    // Hides the RefreshControl
+    @objc func refreshControlAction(_ refreshControl: UIRefreshControl) {
+        
+        loadPosts()
+        // Tell the refreshControl to stop spinning
+        //self.tableView.reloadData()
+        refreshControl.endRefreshing()
+    }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

@@ -11,63 +11,58 @@ import Parse
 
 class CameraViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate{
 
+
+
+    @IBOutlet weak var camera: UIButton!
+    @IBOutlet weak var shareButton: UIButton!
     @IBOutlet weak var messageField: UITextField!
     @IBOutlet weak var photoImage: UIImageView!
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        messageField.delegate = self
-        messageField.returnKeyType = .done
-        // Do any additional setup after loading the view.
-    }
     
-    @IBAction func openLibrary(_ sender: Any) {
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        
-        let actionSheet = UIAlertController(title: "Photo Source", message: "Choose a source", preferredStyle: .actionSheet)
-        
-        actionSheet.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action: UIAlertAction) in
-            if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                imagePicker.sourceType = .camera
-                self.present(imagePicker, animated: true, completion: nil)
-            }else {
-                print("Camera not available")
-            }
-        }))
-        
-        actionSheet.addAction(UIAlertAction(title: "Photo Library", style: .default, handler: { (action: UIAlertAction) in
-            imagePicker.sourceType = .photoLibrary
-            self.present(imagePicker, animated: true, completion: nil)
-        }))
-        
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            self.present(actionSheet, animated: true, completion: nil)
-        
-    
-    }
+    var postImage: UIImage! = nil
     
     //share and upload photo to the main view
-    @IBAction func sharePhoto(_ sender: Any) {
+
+    @IBAction func sharePost(_ sender: Any) {
+      
         let image = photoImage.image!
         let caption = messageField.text!
-        PostFile.postUserImage(image: image, withCaption: caption) { (success: Bool, error: Error?) in
+        Post.postUserImage(image: image, withCaption: caption) { (success: Bool, error: Error?) in
             if success {
                 self.performSegue(withIdentifier: "share", sender: nil)
             } else {
                 print(error?.localizedDescription ?? "")
             }
         }
-       
     }
             
     
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        let image = info[UIImagePickerControllerOriginalImage] as! UIImage
-        photoImage.image = image
-        picker.dismiss(animated: true, completion: nil)
-
+       
+            // Get the image captured by the UIImagePickerController
+            let originalImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+            
+            let resizedImage = resize(image: originalImage, newSize: CGSize(width: 300, height: 300))
+            self.dismiss(animated: true, completion: nil)
+            
+            photoImage.contentMode = .scaleToFill
+            photoImage.image = resizedImage
+            camera.isEnabled = true
+            
+            shareButton.isEnabled = true
         
+    }
+    
+    private func resize(image: UIImage, newSize: CGSize) -> UIImage {
+        let resizeImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
+        resizeImageView.contentMode = UIViewContentMode.scaleAspectFill
+        resizeImageView.image = image
+        
+        UIGraphicsBeginImageContext(resizeImageView.frame.size)
+        resizeImageView.layer.render(in: UIGraphicsGetCurrentContext()!)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        return newImage
     }
     
     
@@ -82,8 +77,27 @@ class CameraViewController: UIViewController, UIImagePickerControllerDelegate, U
     }
     
    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        messageField.delegate = self
+        messageField.returnKeyType = .done
+        // Do any additional setup after loading the view.
+    }
     
-    
+    @IBAction func cameraLibrary(_ sender: Any) {
+        let vc = UIImagePickerController()
+        vc.delegate = self
+        vc.allowsEditing = true
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            print("Camera is available 📸")
+            vc.sourceType = .camera
+        } else {
+            print("Camera 🚫 available so we will use photo library instead")
+            vc.sourceType = .photoLibrary
+        }
+        
+        self.present(vc, animated: true, completion: nil)
+    }
     
 
     override func didReceiveMemoryWarning() {

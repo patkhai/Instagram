@@ -9,9 +9,9 @@
 import UIKit
 import Parse
 
-class PostFile: PFObject, PFSubclassing{
+class Post: PFObject, PFSubclassing{
     @NSManaged var media: PFFile
-    @NSManaged var authorUsername: String
+    @NSManaged var authorUsername: PFUser
     @NSManaged var caption: String
     @NSManaged var likesCount: Int
     @NSManaged var commentsCount: Int
@@ -34,10 +34,9 @@ class PostFile: PFObject, PFSubclassing{
      */
     class func postUserImage(image: UIImage?, withCaption caption: String, withCompletion completion: PFBooleanResultBlock?) {
         // use subclass approach
-        let post = PostFile()
-        
+        let post = Post()
         post.media = getPFFileFromImage(image)!
-        post.authorUsername = PFUser.current()!.username!
+        post.authorUsername = PFUser.current()!
         
         post.caption = caption
         post.likesCount = 0
@@ -67,7 +66,7 @@ class PostFile: PFObject, PFSubclassing{
         if let image = image {
             // get image data and check if that is not nil
             if let imageData = UIImagePNGRepresentation(image) {
-                return PFFile(name: "upload_image.png", data: imageData)
+                return PFFile(name: "image.png", data: imageData)
             }
         }
         return nil

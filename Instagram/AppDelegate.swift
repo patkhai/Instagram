@@ -27,6 +27,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
             })
         )
+        NotificationCenter.default.addObserver(forName: Notification.Name("didLogout"), object: nil, queue: OperationQueue.main) { (Notification) in
+            print("Logout notification received")
+            // TODO: Logout the User
+            // TODO: Load and show the login view controller
+            userLogOut()
+        }
+        
            // check if user is logged in
         if PFUser.current() != nil {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -35,10 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             self.window?.rootViewController = tabBarController
         }
      
-        // Override point for customization after application launch.
-        return true
-    }
-    
+      
     func userLogOut() {
         // Logout the current user
         PFUser.logOutInBackground(block: { (error) in
@@ -53,6 +57,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         })
     }
+        
+        // Override point for customization after application launch.
+        return true
+    }
+    
 
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.

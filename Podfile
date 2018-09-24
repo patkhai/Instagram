@@ -10,15 +10,8 @@ target 'Instagram' do
 	pod "KRActivityIndicatorView"
 	pod 'PKHUD', '~> 5.0'
 	pod 'Parse' 
+	pod 'ParseUI'
 
-  target 'InstagramTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
 
-  target 'InstagramUITests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
 
 end
