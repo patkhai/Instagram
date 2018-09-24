@@ -118,7 +118,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 print("Successful logout")
                 print(user as Any)
                 
-                self.performSegue(withIdentifier: "logout", sender: nil)
+                self.performSegue(withIdentifier: "log", sender: nil)
             }
             
         })
