@@ -9,12 +9,14 @@
 import UIKit
 import Parse
 import AlamofireImage
+import PKHUD
 
 
 class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
   
 
     
+
     @IBOutlet weak var tableView: UITableView!
     
     
@@ -28,28 +30,21 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         self.tableView.rowHeight = 500
         let refreshControl = UIRefreshControl()
         self.loadPosts()
+        
+        
+        PKHUD.sharedHUD.hide(afterDelay: 0.2)
+        
         // Initialize a UIRefreshControl
         refreshControl.addTarget(self, action: #selector(refreshControlAction(_:)), for: UIControlEvents.valueChanged)
         // add refresh control to table view
         tableView.insertSubview(refreshControl, at: 0)
-
+   
+        
     
         // Do any additional setup after loading the view.
     }
     
-    @IBAction func posterTap(_ sender: UITapGestureRecognizer) {
-        performSegue(withIdentifier: "detail", sender: nil)
-    }
-    
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let cell = sender as! UITableViewCell
-        if let indexPath = tableView.indexPath(for: cell) {
-            let post = postView[indexPath.section]
-        let ProfileController = segue.destination as! ProfileViewController
-        ProfileController.updatePost = post
-        }
-    }
+   
     
     private func loadPosts() {
         let query = PFQuery(className: "Post")
@@ -57,6 +52,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         query.includeKey("author")
         query.includeKey("createdAt")
         query.limit = 20
+        
+        // show HUD
+        PKHUD.sharedHUD.contentView = PKHUDProgressView()
+        PKHUD.sharedHUD.show(onView: tableView)
         
         
         query.findObjectsInBackground { (posts: [PFObject]?, error: Error?) in
@@ -92,38 +91,21 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         return cell
     }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 50
-    }
+
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.tableView.deselectRow(at: indexPath, animated: true)
     }
     
     
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 50))
-        headerView.backgroundColor = UIColor(white: 1, alpha: 0.9)
-        
-        let profileView = UIImageView(frame: CGRect(x: 10, y: 10, width: 30, height: 30))
-        profileView.clipsToBounds = true
-        profileView.layer.cornerRadius = 15;
-        profileView.layer.borderColor = UIColor(white: 0.7, alpha: 0.8).cgColor
-        profileView.layer.borderWidth = 1;
-        
-        let username = PFUser.current()!.username!
-        
-        // Set the avatar
-        profileView.af_setImage(withURL: URL(string: "https://api.adorable.io/avatars/30/\(username)")!)
-        headerView.addSubview(profileView)
-        
-        let postLabel = UILabel(frame: CGRect(x: 50, y: 10, width: 270, height: 30))
-        postLabel.text = username
-        headerView.addSubview(postLabel)
-        
-        return headerView
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let cell = sender as! UITableViewCell
+        if let indexPath = tableView.indexPath(for: cell) {
+            let post = postView[indexPath.section]
+            let ProfileController = segue.destination as! ProfileViewController
+            ProfileController.updatePost = post
+        }
     }
-    
   
 
     @IBAction func logout(_ sender: Any) {

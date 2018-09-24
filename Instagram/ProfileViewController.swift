@@ -15,6 +15,7 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var caption: UILabel!
     @IBOutlet weak var userName: UILabel!
+    
 
     @IBOutlet weak var photoView: PFImageView!
     

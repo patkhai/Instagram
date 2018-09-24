@@ -156,7 +156,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Captionfdfhkdlshfsldfhsdlf" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="abO-H9-hZX">
-                                                    <rect key="frame" x="82" y="434" width="186" height="21"/>
+                                                    <rect key="frame" x="82" y="434" width="312" height="66"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="18"/>
                                                     <color key="textColor" red="0.29844146573604058" green="0.29844146573604058" blue="0.29844146573604058" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -173,9 +173,6 @@
                                                     <rect key="frame" x="0.0" y="55" width="414" height="341"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <gestureRecognizers/>
-                                                    <connections>
-                                                        <outletCollection property="gestureRecognizers" destination="5yd-nx-dwe" appends="YES" id="mer-3E-Yl3"/>
-                                                    </connections>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Likes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="75B-c2-sen">
                                                     <rect key="frame" x="12" y="403" width="35" height="20"/>
@@ -185,7 +182,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CmF-vb-dal">
-                                                    <rect key="frame" x="12" y="26" width="40" height="21"/>
+                                                    <rect key="frame" x="55" y="26" width="40" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" name="GillSans-SemiBold" family="Gill Sans" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -198,9 +195,14 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="th0-xN-JJP">
+                                                    <rect key="frame" x="12" y="18" width="35" height="29"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </imageView>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="avatarImage" destination="th0-xN-JJP" id="Z05-m1-hMV"/>
                                             <outlet property="caption" destination="abO-H9-hZX" id="pY7-1I-zYv"/>
                                             <outlet property="dateLabel" destination="nl1-kc-YGX" id="QxF-Oe-hmP"/>
                                             <outlet property="idLabel" destination="esT-qZ-2O4" id="7KA-qv-G5z"/>
@@ -208,6 +210,7 @@
                                             <outlet property="likeLabel" destination="8wV-Q3-ODV" id="e0J-Ql-OZ0"/>
                                             <outlet property="objectLike" destination="75B-c2-sen" id="59j-Qd-Hu8"/>
                                             <outlet property="postImage" destination="uUZ-1K-arQ" id="lbi-vM-Kcl"/>
+                                            <segue destination="AHR-Ta-4sQ" kind="show" id="hB4-Dv-Xdz"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -226,15 +229,9 @@
                     </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="bTu-P8-G9z" id="IgU-58-0AH"/>
-                        <segue destination="AHR-Ta-4sQ" kind="show" identifier="detail" id="Veu-XT-SKK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZwH-8X-GUu" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="5yd-nx-dwe">
-                    <connections>
-                        <action selector="posterTap:" destination="QlI-nO-V6p" id="Btl-W9-Jzt"/>
-                    </connections>
-                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1950.7246376811595" y="141.84782608695653"/>
         </scene>
@@ -264,16 +261,6 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5xL-WW-7Vi">
-                                <rect key="frame" x="184" y="632" width="55" height="41"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="19"/>
-                                <state key="normal" title="Logout"/>
-                                <connections>
-                                    <action selector="logout:" destination="AHR-Ta-4sQ" eventType="touchUpInside" id="iXa-if-jyx"/>
-                                    <segue destination="BYZ-38-t0r" kind="presentation" id="eI2-mP-upX"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="datedasdsadasdasdasd" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Soa-I6-mIp">
                                 <rect key="frame" x="20" y="358" width="157" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -285,7 +272,21 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="LWJ-xU-R4o"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Profile" id="V3X-fG-8yD"/>
+                    <tabBarItem key="tabBarItem" title="Item" image="profile_tab" id="vf2-3c-LTF"/>
+                    <navigationItem key="navigationItem" title="Profile" id="V3X-fG-8yD">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="IQP-QO-QAY">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="5xL-WW-7Vi">
+                                <rect key="frame" x="339" y="1.6666666666666679" width="55" height="41"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="19"/>
+                                <state key="normal" title="Logout"/>
+                                <connections>
+                                    <action selector="logout:" destination="AHR-Ta-4sQ" eventType="touchUpInside" id="iXa-if-jyx"/>
+                                    <segue destination="BYZ-38-t0r" kind="presentation" identifier="logout" id="eI2-mP-upX"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="caption" destination="Y2B-64-q01" id="8BT-HX-Df7"/>
                         <outlet property="dateLabel" destination="Soa-I6-mIp" id="DNL-lD-AIY"/>
@@ -295,7 +296,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uOI-ez-kpg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2110.144927536232" y="1042.663043478261"/>
+            <point key="canvasLocation" x="1338" y="955"/>
         </scene>
         <!--Camera-->
         <scene sceneID="Bkd-vQ-lKH">
@@ -328,7 +329,7 @@
                                 </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Caption here...." minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tcS-Je-bRD">
-                                <rect key="frame" x="10" y="529" width="394" height="143"/>
+                                <rect key="frame" x="10" y="529" width="384" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
@@ -360,7 +361,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mfH-Sb-RNg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="86" y="1093"/>
+            <point key="canvasLocation" x="85.507246376811594" y="1092.3913043478262"/>
         </scene>
         <!--Instagram-->
         <scene sceneID="kMF-GJ-bYe">
@@ -376,7 +377,6 @@
                     <connections>
                         <segue destination="rWd-zu-Egd" kind="relationship" relationship="viewControllers" id="6Ue-Mu-HMP"/>
                         <segue destination="DZ8-JT-fMC" kind="relationship" relationship="viewControllers" id="8bX-op-S8d"/>
-                        <segue destination="lva-aS-G1X" kind="relationship" relationship="viewControllers" id="qCH-5L-FZF"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="S5X-yV-ke0" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -402,25 +402,6 @@
             </objects>
             <point key="canvasLocation" x="1103" y="142"/>
         </scene>
-        <!--Item-->
-        <scene sceneID="rdo-zW-hJu">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="lva-aS-G1X" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" image="profile_tab" id="a9Y-3T-hVw"/>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="i06-TX-2QC">
-                        <rect key="frame" x="0.0" y="20" width="414" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="AHR-Ta-4sQ" kind="relationship" relationship="rootViewController" id="PPj-S5-h7o"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="u1l-rV-grz" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1202.8985507246377" y="1042.663043478261"/>
-        </scene>
     </scenes>
     <resources>
         <image name="feed_tab" width="25" height="25"/>
@@ -429,9 +410,7 @@
         <image name="profile_tab" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="8bX-op-S8d"/>
         <segue reference="U3y-uG-5kh"/>
-        <segue reference="Veu-XT-SKK"/>
-        <segue reference="LMq-Nc-ZgZ"/>
+        <segue reference="eI2-mP-upX"/>
     </inferredMetricsTieBreakers>
 </document>
